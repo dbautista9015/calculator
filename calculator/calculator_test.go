@@ -27,7 +27,6 @@ func TestAdd(t *testing.T) {
 }
 func TestSubtract(t *testing.T) {
 	t.Parallel()
-
 	type testCase struct {
 		a, b float64
 		want float64
@@ -66,5 +65,69 @@ func TestMultiply(t *testing.T) {
 		if tc.want != got {
 			t.Errorf("Multiply(%f, %f): want %f, got %f", tc.a, tc.b, tc.want, got)
 		}
+	}
+}
+
+func TestDivide(t *testing.T) {
+	t.Parallel()
+	type testCase struct {
+		a, b float64
+		want float64
+	}
+
+	testCases := []testCase{
+		{a: 2, b: 2, want: 1},
+		{a: -1, b: -1, want: 1},
+		{a: 10, b: 2, want: 5},
+	}
+
+	for _, tc := range testCases {
+		got, err := calculator.Divide(tc.a, tc.b)
+		if err != nil {
+			t.Fatalf("want no error for valid input, got %v", err)
+		}
+		if tc.want != got {
+			t.Errorf("Divide(%f, %f): want %f, got %f", tc.a, tc.b, tc.want, got)
+		}
+	}
+}
+
+func TestDivideInvalid(t *testing.T) {
+	t.Parallel()
+	_, err := calculator.Divide(1, 0)
+	if err == nil {
+		t.Error("want error for invalid input, got nil")
+	}
+}
+
+func TestSqrt(t *testing.T) {
+	t.Parallel()
+	type testCase struct {
+		a    float64
+		want float64
+	}
+
+	testCases := []testCase{
+		{a: 25, want: 5},
+		{a: 49, want: 7},
+		{a: 1, want: 1},
+	}
+
+	for _, tc := range testCases {
+		got, err := calculator.Sqrt(tc.a)
+		if err != nil {
+			t.Fatalf("want no error for valid input, got %v", err)
+		}
+		if tc.want != got {
+			t.Errorf("Sqrt(%f): want %f, got %f", tc.a, tc.want, got)
+		}
+	}
+}
+
+func TestSqrtInvalid(t *testing.T) {
+	t.Parallel()
+	_, err := calculator.Sqrt(-20)
+	if err == nil {
+		t.Fatal("want error for invalid input, got nil")
 	}
 }
